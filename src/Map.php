@@ -17,18 +17,22 @@ class Map
     protected $longueur;
     protected $hauteur;
 
-    protected $map;
+    protected $posXHero;
+    protected $posYHero;
 
     public function __construct($longueur, $hauteur)
     {
         $this->longueur = ($longueur > 0) ? $longueur : 10;
         $this->hauteur = ($hauteur > 0) ? $hauteur : 10;
+        $this->posXHero = rand(0, $this->longueur - 1);
+        $this->posYHero = rand(0, $this->hauteur - 1);
     }
 
     public function visualiser(): string
     {
         $final = $this->genererInformations();
         $final .= $this->genererMap();
+        $final .= $this->genererActions();
         return $final;
     }
 
@@ -42,6 +46,16 @@ class Map
         return $infos;
     }
 
+    public function genererActions(): string
+    {
+        $actions = Titre::createTitle('actions', $this->longueur * 4, '-', Couleurs::RED, Couleurs::YELLOW);
+        $actions .= '- gauche' . PHP_EOL;
+        $actions .= '- haut' . PHP_EOL;
+        $actions .= '- droite' . PHP_EOL;
+        $actions .= '- bas' . PHP_EOL;
+        return $actions;
+    }
+
     public function genererMap(): string
     {
         // Create Title
@@ -53,6 +67,7 @@ class Map
         $map .= PHP_EOL;
 
         $nextMap = $this->genererMapArray();
+        $nextMap[$this->posYHero][$this->posXHero] = self::POSITION_HERO;
 
         for ($y = 0; $y < $this->hauteur; $y++) {
             $map .= $this->genererLigneMatrice($y, $nextMap);
@@ -83,6 +98,22 @@ class Map
         }
         $mat[$this->posYHero][$this->posXHero] = self::POSITION_HERO;
         return $mat;
+    }
+
+    public function moveHero(int $posY, int $posX): void
+    {
+        $this->posYHero = $posY;
+        $this->posXHero = $posX;
+    }
+
+    public function getPosXHero()
+    {
+        return $this->posXHero;
+    }
+
+    public function getPosYHero()
+    {
+        return $this->posYHero;
     }
 
     public function getLongueur()
