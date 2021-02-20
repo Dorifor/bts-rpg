@@ -8,7 +8,7 @@ require 'vendor/autoload.php';
 
 Utils::effacerEcran();
 
-$map = new Map(10, 10);
+$map = Map::__constructFile('map2');
 echo $map->visualiser();
 $user = '';
 while ($user != 'stop') {
@@ -18,28 +18,28 @@ while ($user != 'stop') {
     $user = readline('Dans quelle direction veux-tu aller : ');
     switch ($user) {
         case 'gauche':
-            if ($posX == 0) {
+            if ($posX == 0 || $map->isObstacle($posY, $posX - 1)) {
                 goto obstacle;
             }
             $map->moveHero($posY, $posX - 1);
             break;
 
         case 'haut':
-            if ($posY == 0) {
+            if ($posY == 0 || $map->isObstacle($posY - 1, $posX)) {
                 goto obstacle;
             }
             $map->moveHero($posY - 1, $posX);
             break;
 
         case 'droite':
-            if ($posX == $map->getLongueur() - 1) {
+            if ($posX == $map->getLongueur() - 1 || $map->isObstacle($posY, $posX + 1)) {
                 goto obstacle;
             }
             $map->moveHero($posY, $posX + 1);
             break;
 
         case 'bas':
-            if ($posY == $map->getHauteur() - 1) {
+            if ($posY == $map->getHauteur() - 1 || $map->isObstacle($posY + 1, $posX)) {
                 goto obstacle;
             }
             $map->moveHero($posY + 1, $posX);
