@@ -7,14 +7,17 @@ use App\Utilitaires\Utils;
 require 'vendor/autoload.php';
 
 Utils::effacerEcran();
-
-$map = Map::__constructFile('map2');
+$map = Map::__constructFile('map3');
 echo $map->visualiser();
 $user = '';
+$error = '';
 while ($user != 'stop') {
+    Utils::effacerEcran();
+    echo $map->visualiser();
+    echo $error;
+    $error = '';
     $posY = $map->getPosYHero();
     $posX = $map->getPosXHero();
-    $error = '';
     $user = readline('Dans quelle direction veux-tu aller : ');
     switch ($user) {
         case 'gauche':
@@ -47,6 +50,10 @@ while ($user != 'stop') {
 
         case 'stop':
             break;
+        
+        case 'save':
+            $map->saveMap('map2');
+            break;
 
         case '':
             obstacle:
@@ -57,6 +64,4 @@ while ($user != 'stop') {
             $error = Couleurs::RED . 'erreur : mauvaise commande.' . Couleurs::RESET . PHP_EOL;
             break;
     }
-    echo $map->visualiser();
-    echo $error;
 }

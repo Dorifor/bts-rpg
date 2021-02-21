@@ -27,13 +27,14 @@ class Map
         [self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE, self::POSITION_OBSTACLE]
     ];
 
-    protected $longueur;
-    protected $hauteur;
+    protected int $longueur;
+    protected int $hauteur;
+    protected int $posXHero;
+    protected int $posYHero;
 
-    protected $posXHero;
-    protected $posYHero;
+    protected array $map;
 
-    protected $map;
+    protected string $mapName;
 
     protected function __construct()
     {
@@ -46,6 +47,7 @@ class Map
         $map->map = $mapArray;
         $map->longueur = count($mapArray[0]);
         $map->hauteur = count($mapArray);
+        $map->mapName = $mapName;
         return $map;
     }
 
@@ -90,11 +92,8 @@ class Map
     public function genererActions(): string
     {
         $actions = Titre::createTitle('actions', $this->longueur * 4, '-', Couleurs::RED, Couleurs::YELLOW);
-        $actions .= '- gauche' . PHP_EOL;
-        $actions .= '- haut' . PHP_EOL;
-        $actions .= '- droite' . PHP_EOL;
-        $actions .= '- bas' . PHP_EOL;
-        $actions .= '- stop' . PHP_EOL;
+        $actions .= '- haut / bas / gauche / droite' . PHP_EOL;
+        $actions .= '- stop / save' . PHP_EOL;
         return $actions;
     }
 
@@ -143,45 +142,6 @@ class Map
         return $mat;
     }
 
-    // public function genererMapFromFichier(string $mapName): array
-    // {
-    //     $filepath = 'src/CustomMaps/' . $mapName;
-    //     $file = fopen($filepath, 'rb');
-    //     $map = fread($file, filesize($filepath));
-    //     $lines = explode(PHP_EOL, $map);
-    //     $maparray = [];
-    //     foreach ($lines as $block) {
-    //         // array_push($maparray, explode(',', $block));\
-    //         array_push($maparray, str_split($block));
-    //     }
-    //     foreach ($maparray as $line ) {
-    //         foreach ($line as $tile) {
-    //             $posX = array_search($tile, array_values($line));
-    //             $posY = array_search($line, array_values($maparray));
-    //             switch ($tile) {
-    //                 case '-':
-    //                     $maparray[$posY][$posX] = self::POSITION_VIDE;
-    //                     break;
-
-    //                 case 'H':
-    //                     $this->posYHero = $posY;
-    //                     $this->posXHero = $posX;
-    //                     $maparray[$posY][$posX] = self::POSITION_VIDE;
-    //                     break;
-
-    //                 case 'O':
-    //                     $maparray[$posY][$posX] = self::POSITION_OBSTACLE;
-    //                     break;
-
-    //                 default:
-    //                     $maparray[$posY][$posX] = self::POSITION_VIDE;
-    //                     break;
-    //             }
-    //         }
-    //     }
-    //     return $maparray;
-    // }
-
     protected function genererMapFromFichier(string $mapName): array
     {
         $mapArray = [];
@@ -205,7 +165,7 @@ class Map
                         $this->posXHero = $posX;
                         array_push($newLine, self::POSITION_VIDE);
                         break;
-                    
+
                     case 'O':
                         array_push($newLine, self::POSITION_OBSTACLE);
                         break;
@@ -218,6 +178,41 @@ class Map
             array_push($mapArray, $newLine);
         }
         return $mapArray;
+    }
+
+    public function saveMap(string $mapName): void
+    {
+        // to save map on different file later
+        $mapName = $this->mapName;
+        $map = $this->map;
+        $save = '';
+        $map[$this->posYHero][$this->posXHero] = self::POSITION_HERO;
+        foreach ($map as $line) {
+            foreach ($line as $tile) {
+                switch ($tile) {
+                    case self::POSITION_VIDE:
+                        $save .= '-';
+                        break;
+
+                    case self::POSITION_OBSTACLE:
+                        $save .= 'O';
+                        break;
+
+                    case self::POSITION_HERO:
+                        $save .= 'H';
+                        break;
+
+                    default:
+                        $save .= '-';
+                        break;
+                }
+            }
+            $save .= PHP_EOL;
+        }
+        $save = trim($save);
+        $path = 'src/CustomMaps/' . $mapName;
+        $saveFile = fopen($path, 'wb');
+        fwrite($saveFile, $save);
     }
 
     public function isObstacle(int $posY, int $posX): bool
