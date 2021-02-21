@@ -3,4 +3,11 @@ RPG en ligne de commandes commencé en cours
 
 Wouah, mais à quoi pourrait donc ressembler cet incroyable programme ? 
 
-![demo gif](incroyable.gif)
+
+#### PAF CREATION DE MAPS
+![demo gif](creationMap.gif)
+
+
+
+#### PAF IMPORT ET SAVE DE LA MAP
+![demo gif](OpenSaveMap.gif)
