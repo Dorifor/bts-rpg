@@ -7,10 +7,20 @@ use App\Utilitaires\Utils;
 require 'vendor/autoload.php';
 
 Utils::effacerEcran();
-$map = Map::__constructFile('map3');
+
+$mapName = '';
+$error = '';
+$maps = array_slice(scandir('src/customMaps/'), 2);
+while (!in_array($mapName, $maps)) {
+    foreach ($maps as $map) {
+        echo '- ' . $map . PHP_EOL;
+    }
+    $mapName = readline('Choisissez la map : ');
+}
+
+$map = Map::__constructFile($mapName);
 echo $map->visualiser();
 $user = '';
-$error = '';
 while ($user != 'stop') {
     Utils::effacerEcran();
     echo $map->visualiser();
@@ -50,7 +60,7 @@ while ($user != 'stop') {
 
         case 'stop':
             break;
-        
+
         case 'save':
             $map->saveMap('map2');
             break;
