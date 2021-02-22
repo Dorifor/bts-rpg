@@ -1,3 +1,10 @@
+#### TO DO
+- scrolling
+- events
+- inventaire
+- combat
+- profil
+
 # RPG BTS PHP
 RPG en ligne de commandes commencé en cours
 
