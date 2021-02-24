@@ -29,6 +29,8 @@ class Map
 
     protected int $longueur;
     protected int $hauteur;
+
+    protected Hero $hero;
     protected int $posXHero;
     protected int $posYHero;
 
@@ -40,7 +42,7 @@ class Map
     {
     }
 
-    public static function __constructFile($mapName): Map
+    public static function __constructFile($mapName, $heroName): Map
     {
         $map = new Map();
         $mapArray = $map->genererMapFromFichier($mapName);
@@ -48,6 +50,7 @@ class Map
         $map->longueur = count($mapArray[0]);
         $map->hauteur = count($mapArray);
         $map->mapName = $mapName;
+        $map->hero = new Hero($heroName);
         return $map;
     }
 
@@ -83,7 +86,7 @@ class Map
         $infos = Titre::createTitle('informations', $this->longueur * 4, '-', Couleurs::RED, Couleurs::YELLOW);
         $infos .= Couleurs::PURPLE . 'Dimensions' . Couleurs::RESET . ' : (' . Couleurs::GREEN . $this->hauteur . Couleurs::RESET . ', ' . Couleurs::GREEN . $this->longueur . Couleurs::RESET . ')' . PHP_EOL;
         $infos .= Couleurs::PURPLE . 'Vide' . Couleurs::RESET . ' : ' . Couleurs::YELLOW . self::POSITION_VIDE . PHP_EOL;
-        $infos .= Couleurs::PURPLE . 'Hero' . Couleurs::RESET . ' : ' . Couleurs::YELLOW . self::POSITION_HERO . Couleurs::RESET . ' (' . Couleurs::DARK_GRAY . $this->posYHero . Couleurs::RESET . ', ' . Couleurs::DARK_GRAY . $this->posXHero . Couleurs::RESET . ')' . PHP_EOL;
+        $infos .= Couleurs::PURPLE . 'Hero' . Couleurs::RESET . ' : ' . Couleurs::YELLOW . $this->hero->getNom() . ' - ' . self::POSITION_HERO . Couleurs::RESET . ' (' . Couleurs::DARK_GRAY . $this->posYHero . Couleurs::RESET . ', ' . Couleurs::DARK_GRAY . $this->posXHero . Couleurs::RESET . ')' . PHP_EOL;
         $infos .= Couleurs::PURPLE . 'Obstacle' . Couleurs::RESET . ' : ' . Couleurs::YELLOW . self::POSITION_OBSTACLE . PHP_EOL;
         $infos .= Couleurs::PURPLE . 'Personnage' . Couleurs::RESET . ' : ' . Couleurs::YELLOW . self::POSITION_PERSONNAGE . PHP_EOL;
         return $infos;

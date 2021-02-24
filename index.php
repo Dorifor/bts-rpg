@@ -1,5 +1,6 @@
 <?php
 
+use App\Hero;
 use App\Map;
 use App\Utilitaires\Couleurs;
 use App\Utilitaires\Utils;
@@ -18,7 +19,7 @@ while (!in_array($mapName, $maps)) {
     $mapName = readline('Choisissez la map : ');
 }
 
-$map = Map::__constructFile($mapName);
+$map = Map::__constructFile($mapName, 'cochonax');
 echo $map->visualiser();
 $user = '';
 while ($user != 'stop') {
